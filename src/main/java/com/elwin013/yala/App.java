@@ -60,6 +60,15 @@ public class App {
         objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS); // to have ISO-8601 dates representation
         objectMapper.registerModule(new JavaTimeModule());
 
+        var objectIdDeserializerModule = new SimpleModule();
+        objectIdDeserializerModule.addSerializer(ObjectId.class, new JsonSerializer<>() {
+            @Override
+            public void serialize(ObjectId value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
+                gen.writeString(value.toHexString());
+            }
+        });
+        objectMapper.registerModule(objectIdDeserializerModule);
+
         config.jsonMapper(new JavalinJackson(objectMapper));
     }
 
