@@ -12,16 +12,29 @@ import io.javalin.openapi.plugin.OpenApiConfiguration;
 import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
+import io.javalin.validation.JavalinValidation;
+
+import java.time.Instant;
+import java.time.format.DateTimeFormatter;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class App {
+    public static String APP_FRONTEND_URL;
+
     public static void main(String[] args) {
-        MongoDbHolder.init();
+        var appUrl = System.getenv().get("APP_FRONTEND_URL");
+        APP_FRONTEND_URL = appUrl.endsWith("/") ? appUrl.substring(0, appUrl.length() - 1) : appUrl;
+
+        MongoDbHolder.init(System.getenv().get("MONGO_DB_URL"));
 
         var app = Javalin.create(cfg -> {
             openApiConfig(cfg);
             configureJacksonMapper(cfg);
+        });
+
+        JavalinValidation.register(Instant.class, text -> {
+            return Instant.from(DateTimeFormatter.ISO_OFFSET_DATE_TIME.parse(text));
         });
 
 

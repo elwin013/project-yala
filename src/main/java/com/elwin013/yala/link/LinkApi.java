@@ -1,5 +1,6 @@
 package com.elwin013.yala.link;
 
+import com.elwin013.yala.sequence.SequenceDao;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.openapi.*;
@@ -21,7 +22,8 @@ public final class LinkApi {
     )
     public static void linkCreate(Context ctx) {
         var dto = ctx.bodyAsClass(CreateLinkDto.class);
-        Link entity = new MongoLinkDAO().createLink(dto.targetUrl(), dto.secretKey());
+        var sequenceNumber = new SequenceDao().getNextValue("link_seq");
+        Link entity = new MongoLinkDAO().createLink(dto.targetUrl(), dto.secretKey(), sequenceNumber);
 
         ctx.json(LinkDto.fromEntity(entity));
     }

@@ -7,7 +7,6 @@ import com.mongodb.client.model.Updates;
 import org.bson.types.ObjectId;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -17,10 +16,10 @@ public final class MongoLinkDAO {
     public MongoLinkDAO() {
         this.collection = MongoDbHolder.getDatabase().getCollection(Link.COLLECTION_NAME, Link.class);
     }
-    public Link createLink(String targetUrl, String secretKey) {
+    public Link createLink(String targetUrl, String secretKey, long sequenceNumber) {
         var key = secretKey != null ? secretKey : UUID.randomUUID().toString();
         var id = ObjectId.get();
-        var slug = UUID.randomUUID().toString().replace("-", "");
+        var slug = sequenceNumber + UUID.randomUUID().toString().replace("-", "").substring(0, 6);
 
         var entity = new Link(id, targetUrl, slug, key, 0L, Instant.now());
 
@@ -29,12 +28,9 @@ public final class MongoLinkDAO {
     }
 
     public Optional<Link> getLink(String slug) {
-        var link = collection.find(Filters.eq("slug", slug)).limit(1).into(new ArrayList<>());
-        if (link.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return Optional.of(link.get(0));
-        }
+        var link = collection.find(Filters.eq("slug", slug)).first();
+        return Optional.ofNullable(link);
+
     }
 
     public void incrementClicks(ObjectId id) {
@@ -45,17 +41,12 @@ public final class MongoLinkDAO {
         var link = collection.find(
                         Filters.and(
                                 Filters.eq("_id", id),
-                                Filters.eq("adminKey", adminKey)
+                                Filters.eq("secretKey", adminKey)
                         )
                 )
-                .limit(1)
-                .into(new ArrayList<>());
+                .first();
 
-        if (link.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return Optional.of(link.get(0));
-        }
+        return Optional.ofNullable(link);
     }
 
     public void deleteLink(ObjectId id) {

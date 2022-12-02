@@ -1,5 +1,6 @@
 package com.elwin013.yala.mongo;
 
+import com.elwin013.yala.sequence.SequenceDao;
 import com.mongodb.ConnectionString;
 import com.mongodb.MongoClientSettings;
 import com.mongodb.client.MongoClient;
@@ -15,9 +16,7 @@ public final class MongoDbHolder {
     private static MongoClient client;
     private static MongoDatabase database;
 
-    public static void init() {
-        var url = System.getenv().get("MONGO_DB_URL");
-
+    public static void init(String url) {
         ConnectionString connectionString = new ConnectionString(url);
         MongoClientSettings settings = MongoClientSettings.builder()
                 .applyConnectionString(connectionString)
@@ -29,6 +28,15 @@ public final class MongoDbHolder {
         );
 
         database = client.getDatabase("yala").withCodecRegistry(pojoCodecRegistry);
+
+        initSequence();
+    }
+
+    private static void initSequence() {
+        var dao = new SequenceDao(database);
+        if (!dao.exists("link_seq")) {
+            dao.reset("link_seq", 0);
+        };
     }
 
     public static MongoDatabase getDatabase() {
