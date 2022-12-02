@@ -1,9 +1,14 @@
 package com.elwin013.yala;
 
 import com.elwin013.yala.link.LinkApi;
+import com.elwin013.yala.link.visit.LinkVisitApi;
 import com.elwin013.yala.mongo.MongoDbHolder;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
@@ -13,7 +18,9 @@ import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import io.javalin.validation.JavalinValidation;
+import org.bson.types.ObjectId;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.format.DateTimeFormatter;
 
@@ -44,6 +51,9 @@ public class App {
                 post("/", LinkApi::linkCreate);
                 get("/{id}/{secretKey}", LinkApi::linkGet);
                 delete("/{id}/{secretKey}", LinkApi::linkDelete);
+            });
+            path("/api/link-visit", () -> {
+                get("/{id}/{secretKey}", LinkVisitApi::visitsGet);
             });
         });
 

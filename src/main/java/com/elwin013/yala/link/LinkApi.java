@@ -1,5 +1,6 @@
 package com.elwin013.yala.link;
 
+import com.elwin013.yala.link.visit.MongoLinkVisitDAO;
 import com.elwin013.yala.sequence.SequenceDao;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
@@ -106,6 +107,9 @@ public final class LinkApi {
         if (linkOpt.isPresent()) {
             var link = linkOpt.get();
             dao.incrementClicks(link.id);
+            new MongoLinkVisitDAO().addVisit(
+                    link.slug, link.id, ctx.req().getHeader("user-agent"), ctx.req().getRemoteAddr(), ctx.req().getHeader("referer")
+            );
 
             ctx.redirect(link.targetUrl);
         } else {
