@@ -22,7 +22,7 @@ content = @`
             <table>
                 <thead>
                 <tr>
-                    <td>Day and hour</td>
+                    <td>Day and hour (hour starting at)</td>
                     <td>Visits</td>
                 </tr>
                 </thead>

@@ -23,7 +23,7 @@ public record LinkDto(
                 entity.targetUrl,
                 App.APP_FRONTEND_URL + "/j/" + entity.slug,
                 App.APP_FRONTEND_URL + "/j/" + entity.slug + "/preview",
-                App.APP_FRONTEND_URL + "/details/" + entity.id.toHexString() + "/" + entity.secretKey,
+                App.APP_FRONTEND_URL + "/link/" + entity.id.toHexString() + "/" + entity.secretKey + "/visits",
                 App.APP_FRONTEND_URL + "/delete/" + entity.id.toHexString() + "/" + entity.secretKey,
                 entity.slug,
                 entity.secretKey,

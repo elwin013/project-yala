@@ -86,7 +86,7 @@ public class App {
             get("/create_link", ctx -> ctx.redirect("/"));
             post("/create_link", LinkPages::createLink);
             get("/link/{id}/{secretKey}", LinkPages::showDetails);
-            get("/details/{id}/{secretKey}", LinkPages::showAnalitycs);
+            get("/link/{id}/{secretKey}/visits", LinkPages::showVisits);
             get("/delete/{id}/{secretKey}", LinkPages::linkDelete);
             get("/j/{slug}/preview", LinkPages::previewLink);
         });

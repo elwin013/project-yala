@@ -51,7 +51,7 @@ public class LinkPages {
         }
     }
 
-    public static void showAnalitycs(Context ctx) {
+    public static void showVisits(Context ctx) {
         var link = service.getLink(ctx.pathParam("id"), ctx.pathParam("secretKey"));
         if (link.isPresent()) {
             var visits = service.getLinkVisits(link.get());

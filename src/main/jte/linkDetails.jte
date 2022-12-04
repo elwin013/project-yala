@@ -24,8 +24,8 @@ content = @`
 
             <div class="row">
                 <div class="col-12">
-                    Click here to open link detailed view (with visit stats):
-                    <a href="${link.detailsUrl()}" class="button primary">Open analitycs!</a>
+                    Click here to open link view with visit stats:
+                    <a href="${link.detailsUrl()}" class="button primary">Open visits!</a>
                 </div>
             </div>
 
