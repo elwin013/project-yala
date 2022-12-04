@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import gg.jte.ContentType;
+import gg.jte.TemplateEngine;
 import io.javalin.Javalin;
 import io.javalin.config.JavalinConfig;
 import io.javalin.json.JavalinJackson;
@@ -35,6 +37,7 @@ public class App {
     public static boolean PREVIEW_MODE;
 
     public static void main(String[] args) {
+        var isProduction = System.getenv().get("PRODUCTION") != null;
         var appUrl = System.getenv().get("APP_FRONTEND_URL");
         var mongoUrl = System.getenv().get("MONGO_DB_URL");
         PREVIEW_MODE = System.getenv().get("PREVIEW_MODE") != null && Boolean.parseBoolean(System.getenv().get("PREVIEW_MODE"));
@@ -44,9 +47,15 @@ public class App {
 
         APP_FRONTEND_URL = appUrl.endsWith("/") ? appUrl.substring(0, appUrl.length() - 1) : appUrl;
 
+
         MongoDbHolder.init(mongoUrl);
 
-        JavalinJte.init();
+        if (isProduction) {
+            JavalinJte.init(TemplateEngine.createPrecompiled(ContentType.Html));
+        } else {
+            JavalinJte.init();
+        }
+
 
         var app = Javalin.create(cfg -> {
             openApiConfig(cfg);

@@ -25,3 +25,9 @@ To run project you need to specify two environmental variables:
 To run app in "preview mode" - where no changes can be made (that means no creating new links and deleting old) you
 cann pass set `PREVIEW_MODE` variable with `true` value.
 
+## Running in Docker
+
+To run in Docker container:
+1. build container e.g. `docker build . -f docker/Dockerfile -t project-yala:latest`
+2. run it after the build with env variables
+   `docker run -p 7070:7070 -e "APP_FRONTEND_URL=http://localhost:7070/"  "MONGO_DB_URL=$YOUR_MONGO_URL" project-yala:latest`
