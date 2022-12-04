@@ -1,4 +1,3 @@
-
 @template.layout(
 title = "Error",
 content = @`

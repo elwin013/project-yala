@@ -1,4 +1,3 @@
-
 @template.layout(
 title = "Link details",
 content = @`

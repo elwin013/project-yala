@@ -33,8 +33,6 @@ public final class LinkApi {
     }
 
 
-
-
     @OpenApi(
             description = "Gets link details",
             path = "/api/link/{id}/{secretKey}",

@@ -24,16 +24,16 @@ public final class Aggregations {
             // You must declare all other expressions in JSON format or compatible document format.
             // https://www.mongodb.com/docs/drivers/java/sync/current/fundamentals/aggregation/#aggregation-expression-example
             group(Document.parse("""
-                                    {
-                                      date: {
-                                        year: "$date.year",
-                                        month: "$date.month",
-                                        day: "$date.day",
-                                        hour: "$date.hour"
-                                      },
-                                      metadata: "$metadata"
-                                    }
-                                """),
+                                {
+                                  date: {
+                                    year: "$date.year",
+                                    month: "$date.month",
+                                    day: "$date.day",
+                                    hour: "$date.hour"
+                                  },
+                                  metadata: "$metadata"
+                                }
+                            """),
                     Accumulators.sum("count", 1L)
             ),
             project(
@@ -41,14 +41,14 @@ public final class Aggregations {
 
                             Projections.computed("_id",
                                     new Document("$dateFromParts",
-                                    Document.parse("""
-                                            {
-                                                year: "$_id.date.year",
-                                                month: "$_id.date.month",
-                                                day: "$_id.date.day",
-                                                hour: "$_id.date.hour"
-                                              }
-                                            """)
+                                            Document.parse("""
+                                                    {
+                                                        year: "$_id.date.year",
+                                                        month: "$_id.date.month",
+                                                        day: "$_id.date.day",
+                                                        hour: "$_id.date.hour"
+                                                      }
+                                                    """)
                                     )
                             ),
                             Projections.computed("metadata", "$_id.metadata"),

@@ -43,7 +43,8 @@ public final class MongoDbHolder {
         var dao = new SequenceDao(database);
         if (!dao.exists("link_seq")) {
             dao.reset("link_seq", 0);
-        };
+        }
+        ;
     }
 
     private static void initTimeSeriesCollection() {
@@ -59,7 +60,7 @@ public final class MongoDbHolder {
                                 new TimeSeriesOptions("timestamp")
                                         .granularity(TimeSeriesGranularity.SECONDS)
                                         .metaField("metadata")
-                                )
+                        )
         );
     }
 

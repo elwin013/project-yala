@@ -16,6 +16,7 @@ public final class MongoLinkDAO {
     public MongoLinkDAO() {
         this.collection = MongoDbHolder.getDatabase().getCollection(Link.COLLECTION_NAME, Link.class);
     }
+
     public Link createLink(String targetUrl, long sequenceNumber) {
         var key = UUID.randomUUID().toString();
         var id = ObjectId.get();

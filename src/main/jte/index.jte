@@ -5,7 +5,9 @@ content = @`
         <div class="col-2"></div>
         <div class="col-8">
             <p>YALA stands for Yet Another Link-shortener App and is a simple web link shortener.</p>
-            <p>You can see code of this app on the GitHub - <a href="https://github.com/elwin013/project-yala">https://github.com/elwin013/project-yala</a>
+            <p>
+                You can see code of this app on the GitHub -
+                <a href="https://github.com/elwin013/project-yala">https://github.com/elwin013/project-yala</a>
             </p>
         </div>
         <div class="col-2"></div>
