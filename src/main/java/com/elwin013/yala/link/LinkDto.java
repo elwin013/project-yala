@@ -8,7 +8,11 @@ public record LinkDto(
         String id,
         String targetUrl,
         String shortUrl,
-        String adminKey,
+        String shortWithPrevievUrl,
+        String detailsUrl,
+        String deleteUrl,
+        String slug,
+        String secretKey,
         Long clicks,
         Instant createdAt
 
@@ -18,6 +22,10 @@ public record LinkDto(
                 entity.id.toHexString(),
                 entity.targetUrl,
                 App.APP_FRONTEND_URL + "/j/" + entity.slug,
+                App.APP_FRONTEND_URL + "/j/" + entity.slug + "/preview",
+                App.APP_FRONTEND_URL + "/details/" + entity.id.toHexString() + "/" + entity.secretKey,
+                App.APP_FRONTEND_URL + "/delete/" + entity.id.toHexString() + "/" + entity.secretKey,
+                entity.slug,
                 entity.secretKey,
                 entity.clicks,
                 entity.createdAt

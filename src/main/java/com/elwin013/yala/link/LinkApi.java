@@ -1,13 +1,10 @@
 package com.elwin013.yala.link;
 
-import com.elwin013.yala.link.visit.MongoLinkVisitDAO;
-import com.elwin013.yala.sequence.SequenceDao;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.openapi.*;
-import org.bson.types.ObjectId;
 
-import java.util.Optional;
+import java.net.MalformedURLException;
 
 public final class LinkApi {
 
@@ -23,11 +20,14 @@ public final class LinkApi {
     )
     public static void linkCreate(Context ctx) {
         var dto = ctx.bodyAsClass(CreateLinkDto.class);
-        var sequenceNumber = new SequenceDao().getNextValue("link_seq");
-        Link entity = new MongoLinkDAO().createLink(dto.targetUrl(), dto.secretKey(), sequenceNumber);
-
-        ctx.json(LinkDto.fromEntity(entity));
+        try {
+            ctx.json(new LinkService().createlink(dto));
+        } catch (MalformedURLException e) {
+            throw new BadRequestResponse("Invalid url!");
+        }
     }
+
+
 
 
     @OpenApi(
@@ -47,10 +47,10 @@ public final class LinkApi {
     public static void linkGet(Context ctx) {
         var id = ctx.pathParam("id");
         var secretKey = ctx.pathParam("secretKey");
-        Optional<Link> linkOpt = new MongoLinkDAO().findLink(new ObjectId(id), secretKey);
+        var linkOpt = new LinkService().getLink(id, secretKey);
 
         if (linkOpt.isPresent()) {
-            ctx.json(LinkDto.fromEntity(linkOpt.get()));
+            ctx.json(linkOpt.get());
         } else {
             ctx.status(404).result("Not found");
         }
@@ -73,11 +73,9 @@ public final class LinkApi {
     public static void linkDelete(Context ctx) {
         var id = ctx.pathParam("id");
         var secretKey = ctx.pathParam("secretKey");
-        var dao = new MongoLinkDAO();
-        Optional<Link> linkOpt = dao.findLink(new ObjectId(id), secretKey);
+        var isDeleted = new LinkService().deleteLink(id, secretKey);
 
-        if (linkOpt.isPresent()) {
-            dao.deleteLink(linkOpt.get().id);
+        if (isDeleted) {
             ctx.status(200).result("Deleted");
         } else {
             ctx.status(404).result("Not found");
@@ -102,16 +100,20 @@ public final class LinkApi {
     )
     public static void jump(Context ctx) {
         var pathParam = ctx.pathParam("slug");
-        var dao = new MongoLinkDAO();
-        var linkOpt = dao.getLink(pathParam);
+        var service = new LinkService();
+        var linkOpt = service.getLink(pathParam);
+
         if (linkOpt.isPresent()) {
             var link = linkOpt.get();
-            dao.incrementClicks(link.id);
-            new MongoLinkVisitDAO().addVisit(
-                    link.slug, link.id, ctx.req().getHeader("user-agent"), ctx.req().getRemoteAddr(), ctx.req().getHeader("referer")
+            service.registerVisit(
+                    link,
+                    ctx.req().getHeader("user-agent"),
+                    ctx.req().getRemoteAddr(),
+                    ctx.req().getHeader("referer")
             );
 
-            ctx.redirect(link.targetUrl);
+
+            ctx.redirect(link.targetUrl());
         } else {
             throw new BadRequestResponse();
         }

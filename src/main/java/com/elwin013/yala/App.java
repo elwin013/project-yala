@@ -1,6 +1,7 @@
 package com.elwin013.yala;
 
 import com.elwin013.yala.link.LinkApi;
+import com.elwin013.yala.link.LinkPages;
 import com.elwin013.yala.link.visit.LinkVisitApi;
 import com.elwin013.yala.mongo.MongoDbHolder;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -17,16 +18,19 @@ import io.javalin.openapi.plugin.OpenApiConfiguration;
 import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
+import io.javalin.rendering.template.JavalinJte;
 import io.javalin.validation.JavalinValidation;
 import org.bson.types.ObjectId;
 
 import java.io.IOException;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class App {
+    public static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withZone(ZoneId.of("UTC"));
     public static String APP_FRONTEND_URL;
 
     public static void main(String[] args) {
@@ -35,17 +39,16 @@ public class App {
 
         MongoDbHolder.init(System.getenv().get("MONGO_DB_URL"));
 
+        JavalinJte.init();
+
         var app = Javalin.create(cfg -> {
             openApiConfig(cfg);
             configureJacksonMapper(cfg);
         });
 
-        JavalinValidation.register(Instant.class, text -> {
-            return Instant.from(DateTimeFormatter.ISO_OFFSET_DATE_TIME.parse(text));
-        });
+        JavalinValidation.register(Instant.class, text -> Instant.from(DateTimeFormatter.ISO_OFFSET_DATE_TIME.parse(text)));
 
 
-        app.get("/", ctx -> ctx.result("Hello World"));
         app.routes(() -> {
             path("/api/link", () -> {
                 post("/", LinkApi::linkCreate);
@@ -60,6 +63,19 @@ public class App {
         app.routes(() -> {
             get("/j/{slug}", LinkApi::jump);
         });
+
+        app.routes(() -> {
+            get("/", ctx -> ctx.render("index.jte"));
+            get("/invalid_url", ctx -> ctx.render("invalidUrl.jte"));
+            get("/create_link", ctx -> ctx.redirect("/"));
+            post("/create_link", LinkPages::createLink);
+            get("/link/{id}/{secretKey}", LinkPages::showDetails);
+            get("/details/{id}/{secretKey}", LinkPages::showAnalitycs);
+            get("/j/{slug}/preview", LinkPages::previewLink);
+        });
+
+        app.error(404, ctx -> ctx.render("404.jte"));
+        app.error(500, ctx -> ctx.render("error.jte"));
 
 
         app.start(7070);

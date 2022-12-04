@@ -15,6 +15,8 @@
         <javalin.version>5.2.0</javalin.version>
         <slfj.version>2.0.4</slfj.version>
         <reload4j.version>1.2.23</reload4j.version>
+        <jte.version>2.2.3</jte.version>
+
     </properties>
 
     <dependencies>
@@ -33,6 +35,16 @@
             <groupId>io.javalin.community.openapi</groupId>
             <artifactId>javalin-swagger-plugin</artifactId>
             <version>${javalin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin-rendering</artifactId>
+            <version>${javalin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte</artifactId>
+            <version>${jte.version}</version>
         </dependency>
         <!-- Mongodb -->
         <dependency>

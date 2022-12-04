@@ -2,14 +2,14 @@ package com.elwin013.yala.link.visit;
 
 import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.model.Sorts;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static com.mongodb.client.model.Aggregates.group;
-import static com.mongodb.client.model.Aggregates.project;
+import static com.mongodb.client.model.Aggregates.*;
 
 public final class Aggregations {
     public static List<Bson> BY_MINUTE_LINK_VISIT = Arrays.asList(
@@ -29,8 +29,7 @@ public final class Aggregations {
                                         year: "$date.year",
                                         month: "$date.month",
                                         day: "$date.day",
-                                        hour: "$date.hour",
-                                        minute: "$date.minute",
+                                        hour: "$date.hour"
                                       },
                                       metadata: "$metadata"
                                     }
@@ -47,8 +46,7 @@ public final class Aggregations {
                                                 year: "$_id.date.year",
                                                 month: "$_id.date.month",
                                                 day: "$_id.date.day",
-                                                hour: "$_id.date.hour",
-                                                minute: "$_id.date.minute",
+                                                hour: "$_id.date.hour"
                                               }
                                             """)
                                     )
@@ -56,6 +54,7 @@ public final class Aggregations {
                             Projections.computed("metadata", "$_id.metadata"),
                             Projections.computed("count", "$count")
                     )
-            )
+            ),
+            sort(Sorts.descending("_id"))
     );
 }
