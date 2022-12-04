@@ -4,8 +4,9 @@ YALA is a simple link shortener that works without logging in - instead it creat
 
 Generally it is simple app to show that we do not need fancy frameworks to make nice looking, fully working application.
 
-It was created for the [https://dev.to/devteam/announcing-the-mongodb-atlas-hackathon-2022-on-dev-2107](MongoDB Atlas Hackathon 2022 on DEV)
+Created for the [https://dev.to/devteam/announcing-the-mongodb-atlas-hackathon-2022-on-dev-2107](MongoDB Atlas Hackathon 2022 on DEV)
 
+Running example instance (in preview mode) available at https://project-yala.fly.dev/
 
 ## Technologies used
 
