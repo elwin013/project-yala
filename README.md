@@ -22,3 +22,6 @@ To run project you need to specify two environmental variables:
 * `MONGO_DB_URL` - MongoDB connection string
 * `APP_FRONTEND_URL` - app user-facing URL, for local it should be `http://localhost:7070`
 
+To run app in "preview mode" - where no changes can be made (that means no creating new links and deleting old) you
+cann pass set `PREVIEW_MODE` variable with `true` value.
+

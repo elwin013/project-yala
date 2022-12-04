@@ -1,5 +1,6 @@
 package com.elwin013.yala.link;
 
+import com.elwin013.yala.App;
 import io.javalin.http.BadRequestResponse;
 import io.javalin.http.Context;
 import io.javalin.openapi.*;
@@ -19,6 +20,10 @@ public final class LinkApi {
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = CreateLinkDto.class), required = true)
     )
     public static void linkCreate(Context ctx) {
+        if (App.PREVIEW_MODE) {
+            ctx.status(400).result("Sorry! YALA is run in preview mode, which means no add/remove actions can be done!");
+            return;
+        }
         var dto = ctx.bodyAsClass(CreateLinkDto.class);
         try {
             ctx.json(new LinkService().createlink(dto));
@@ -71,6 +76,10 @@ public final class LinkApi {
             }
     )
     public static void linkDelete(Context ctx) {
+        if (App.PREVIEW_MODE) {
+            ctx.status(400).result("Sorry! YALA is run in preview mode, which means no add/remove actions can be done!");
+            return;
+        }
         var id = ctx.pathParam("id");
         var secretKey = ctx.pathParam("secretKey");
         var isDeleted = new LinkService().deleteLink(id, secretKey);

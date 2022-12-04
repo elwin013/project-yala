@@ -32,10 +32,12 @@ import static io.javalin.apibuilder.ApiBuilder.*;
 public class App {
     public static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss").withZone(ZoneId.of("UTC"));
     public static String APP_FRONTEND_URL;
+    public static boolean PREVIEW_MODE;
 
     public static void main(String[] args) {
         var appUrl = System.getenv().get("APP_FRONTEND_URL");
         var mongoUrl = System.getenv().get("MONGO_DB_URL");
+        PREVIEW_MODE = System.getenv().get("PREVIEW_MODE") != null && Boolean.parseBoolean(System.getenv().get("PREVIEW_MODE"));
 
         assert appUrl != null : "APP_FRONTEND_URL is null";
         assert mongoUrl != null : "MONGO_DB_URL is null";
@@ -76,8 +78,13 @@ public class App {
             post("/create_link", LinkPages::createLink);
             get("/link/{id}/{secretKey}", LinkPages::showDetails);
             get("/details/{id}/{secretKey}", LinkPages::showAnalitycs);
+            get("/delete/{id}/{secretKey}", LinkPages::linkDelete);
             get("/j/{slug}/preview", LinkPages::previewLink);
         });
+
+        if (PREVIEW_MODE) {
+            app.get("/preview_mode", ctx -> ctx.render("previewMode.jte"));
+        }
 
         app.error(404, ctx -> ctx.render("404.jte"));
         app.error(500, ctx -> ctx.render("error.jte"));

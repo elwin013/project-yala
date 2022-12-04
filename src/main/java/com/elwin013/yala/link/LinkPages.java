@@ -1,5 +1,6 @@
 package com.elwin013.yala.link;
 
+import com.elwin013.yala.App;
 import io.javalin.http.Context;
 
 import java.net.MalformedURLException;
@@ -24,6 +25,10 @@ public class LinkPages {
     }
 
     public static void createLink(Context ctx) {
+        if (App.PREVIEW_MODE) {
+            ctx.redirect("/preview_mode");
+            return;
+        }
         var targetUrl = ctx.formParam("targetUrl");
         LinkDto link = null;
         try {
@@ -51,6 +56,23 @@ public class LinkPages {
         if (link.isPresent()) {
             var visits = service.getLinkVisits(link.get());
             ctx.render("linkVisits.jte", Map.of("link", link.get(), "visits", visits));
+        } else {
+            ctx.render("404.jte");
+        }
+    }
+
+    public static void linkDelete(Context ctx) {
+        if (App.PREVIEW_MODE) {
+            ctx.redirect("/preview_mode");
+            return;
+        }
+
+        var id = ctx.pathParam("id");
+        var secretKey = ctx.pathParam("secretKey");
+        var isDeleted = new LinkService().deleteLink(id, secretKey);
+
+        if (isDeleted) {
+            ctx.render("deleted.jte");
         } else {
             ctx.render("404.jte");
         }
