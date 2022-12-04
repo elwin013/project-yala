@@ -47,4 +47,10 @@ public final class MongoLinkVisitDAO {
         aggr.addAll(Aggregations.BY_MINUTE_LINK_VISIT);
         return collection.aggregate(aggr, LinkVisitCountDto.class).into(new ArrayList<>());
     }
+
+    public void deleteLinkData(ObjectId id) {
+        collection.deleteMany(Filters.and(
+                Filters.eq("metadata._id", id)
+        ));
+    }
 }

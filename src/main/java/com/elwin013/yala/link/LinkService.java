@@ -36,6 +36,7 @@ public final class LinkService {
 
         if (linkOpt.isPresent()) {
             linkDao.deleteLink(linkOpt.get().id);
+            linkVisitDAO.deleteLinkData(linkOpt.get().id);
             return true;
         } else {
             return false;
