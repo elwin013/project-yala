@@ -20,7 +20,7 @@ public final class LinkService {
             throw new MalformedURLException("Invalid protocol");
         }
         var sequenceNumber = sequenceDao.getNextValue("link_seq");
-        return LinkDto.fromEntity(linkDao.createLink(dto.targetUrl(), sequenceNumber));
+        return LinkDto.fromEntity(linkDao.createLink(dto.targetUrl().trim(), sequenceNumber));
     }
 
     public Optional<LinkDto> getLink(String id, String secretKey) {
