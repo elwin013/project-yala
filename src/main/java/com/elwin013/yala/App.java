@@ -35,9 +35,14 @@ public class App {
 
     public static void main(String[] args) {
         var appUrl = System.getenv().get("APP_FRONTEND_URL");
+        var mongoUrl = System.getenv().get("MONGO_DB_URL");
+
+        assert appUrl != null : "APP_FRONTEND_URL is null";
+        assert mongoUrl != null : "MONGO_DB_URL is null";
+
         APP_FRONTEND_URL = appUrl.endsWith("/") ? appUrl.substring(0, appUrl.length() - 1) : appUrl;
 
-        MongoDbHolder.init(System.getenv().get("MONGO_DB_URL"));
+        MongoDbHolder.init(mongoUrl);
 
         JavalinJte.init();
 
