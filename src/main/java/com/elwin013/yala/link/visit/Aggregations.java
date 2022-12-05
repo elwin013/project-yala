@@ -12,7 +12,7 @@ import java.util.List;
 import static com.mongodb.client.model.Aggregates.*;
 
 public final class Aggregations {
-    public static List<Bson> BY_MINUTE_LINK_VISIT = Arrays.asList(
+    public static List<Bson> BY_HOUR_LINK_VISIT = Arrays.asList(
             project(
                     Projections.fields(
                             Projections.computed("date", new Document("$dateToParts", new Document("date", "$timestamp"))),

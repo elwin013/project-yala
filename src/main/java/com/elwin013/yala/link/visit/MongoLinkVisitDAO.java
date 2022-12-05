@@ -29,7 +29,7 @@ public final class MongoLinkVisitDAO {
     public List<LinkVisitCountDto> getVisitsAllTime(ObjectId id) {
         List<Bson> aggr = new ArrayList<>();
         aggr.add(match(Filters.eq("metadata._id", id)));
-        aggr.addAll(Aggregations.BY_MINUTE_LINK_VISIT);
+        aggr.addAll(Aggregations.BY_HOUR_LINK_VISIT);
         return collection.aggregate(aggr, LinkVisitCountDto.class).into(new ArrayList<>());
     }
 
@@ -44,7 +44,7 @@ public final class MongoLinkVisitDAO {
                         )
                 )
         );
-        aggr.addAll(Aggregations.BY_MINUTE_LINK_VISIT);
+        aggr.addAll(Aggregations.BY_HOUR_LINK_VISIT);
         return collection.aggregate(aggr, LinkVisitCountDto.class).into(new ArrayList<>());
     }
 
